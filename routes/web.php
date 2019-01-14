@@ -13,4 +13,11 @@ Route::group(['as' => 'admin.'], function() {
     // aqdmin dashboard
     Route::get('/admin', 'AdminController@dashboard')->name('dashboard');
 
+    // product
+    Route::resource('product', 'ProductController');
+
+
+    // category
+    Route::resource('category', 'CategoryController');
+
 });

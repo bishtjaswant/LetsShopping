@@ -2,13 +2,23 @@
 
 
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#"> {{ config('app.name', 'LetsShopping') }}  </a>
+  <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{route('admin.dashboard') }}"> {{ config('app.name', 'LetsShopping') }}  </a>
   <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
   <ul class="navbar-nav px-3">
     <li class="nav-item text-nowrap">
-      <a class="nav-link" href="#">Sign out</a>
+
+           <a class="nav-link" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                        Log out
+                                    </a>
+
+
     </li>
-  </ul>
+   </ul>
+   <!--logout form -->  
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;"> @csrf </form>
+
 </nav>
 
 <div class="container-fluid">
@@ -17,7 +27,9 @@
       <div class="sidebar-sticky">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" href="#">
+            <a  href="{{ url('admin') }}" class="nav-link 
+            @if (request()->url() == route('admin.dashboard') ) {{'active'}}  @else  {{''}}  @endif   ">
+
               <span data-feather="home"></span>
               Dashboard <span class="sr-only">(current)</span>
             </a>
@@ -29,31 +41,43 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link
+                @if (request()->url() == route('admin.product.index') ) {{'active'}}  @else  {{''}}  @endif "
+
+             href="{{ route('admin.product.index') }}">
               <span data-feather="shopping-cart"></span>
               Products
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
+
+
+            <li class="nav-item">
+            <a class="nav-link
+               @if (request()->url() == route('admin.category.index') ) {{'active'}}  @else {{''}}  @endif "
+              href="{{route('admin.category.index') }}">
+              <span data-feather="bar-chart-2"></span>
+              Categories
+            </a>
+          </li>
+
+
+      {{--     <li class="nav-item">
+            <a class="nav-link    @if (request()->url() == route('admin.customers') ) {{'active'}}  @else  {{''}}  @endif " 
+              href="#">
               <span data-feather="users"></span>
               Customers
             </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="bar-chart-2"></span>
-              Reports
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
+          </li> --}}
+        
+     {{--      <li class="nav-item">
+            <a class="nav-link  @if (request()->url() == route('admin.integration') ) {{'active'}}  @else {{''}}  @endif "
+             href="#">
               <span data-feather="layers"></span>
               Integrations
             </a>
           </li>
         </ul>
-
+ --}}
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
           <span>Saved reports</span>
           <a class="d-flex align-items-center text-muted" href="#">
@@ -88,3 +112,9 @@
         </ul>
       </div>
     </nav>
+
+
+
+
+
+

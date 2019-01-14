@@ -17,8 +17,8 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
-    <!-- admin's css -->
-    @yield('admin_css')
+  <link rel="stylesheet" type="text/css" href="{{ asset('css/admin.css') }}">
+
     
 </head>
 <body>
@@ -28,7 +28,7 @@
            <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{ config('app.name', 'LetsShopping') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -74,16 +74,46 @@
             </div>
         </nav>
 
+  
 
-        <main class="py-4">
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+       
+
+                <h1 class="h2"> Dashboard  </h1>
+             
+
+             <span class="glyphicon glyphicon-user text-success">
+                  
+                              {{ Auth::user()->email }}
+                      
+             </span>
+        
+  
+      </div>
+
+     
+
 
 <!--navbaar-->
             @include('admin.partial.navbar')
             @yield('content')
         </main>
+    
+
+
+
+
     </div>
 
      <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
-       
+
+        
+     
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"> </script>
+   <script>
+     feather.replace();
+   </script>
+
 </body>
 </html>

@@ -9,6 +9,7 @@ class RedirectIfAuthenticated
 {
     /**
      * Handle an incoming request.
+     * this controller for registered user
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
@@ -18,6 +19,16 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
+
+            switch (Auth::user()->role->name) {
+                case 'admin':
+                    return redirect('/admin');
+                    break;
+                
+                default:
+                    return redirect('/home');
+                    break;
+            }
             return redirect('/home');
         }
 
