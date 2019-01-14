@@ -8,9 +8,9 @@ class AdminController extends Controller
 {
     //
 
-    public function __construct()
+        public function __construct()
     {
-    	// define middlleware
+        $this->middleware(['auth', 'adminAuth']);
     }
 
     public function  dashboard()

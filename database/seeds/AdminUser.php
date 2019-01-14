@@ -16,24 +16,36 @@ class AdminUser extends Seeder
     {
 
     	// crreate  a role
-        $role = Role::create([
+        $customer_role = Role::create([
              'name'=> 'customer',
-             'description'=> 'itt is customer'
+             'description'=> 'it is customer'
         ]);
 
 
-        $role = Role::create([
+        $retailer_role = Role::create([
+             'name'=> 'retailer',
+             'description'=> 'it is retailer'
+        ]);
+
+         
+        $admin_role = Role::create([
              'name'=> 'admin',
-             'description'=> 'itt is admin'
+             'description'=> 'it is admin'
         ]);
 
 
-        // create a user
-
-          $user = User::create([
+        // create a admin user
+          $admin_user = User::create([
              'email' => 'admin@gmail.com',
              'password' => bcrypt('secret'),
-             'role_id'=> $role->id,
+             'role_id'=> $admin_role->id,
+        ]);
+
+   // create a user
+          $user = User::create([
+             'email' => 'jaswant@gmail.com',
+             'password' => bcrypt('secret'),
+             'role_id'=> $customer_role->id,
         ]);
 
 
