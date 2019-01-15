@@ -27,8 +27,8 @@
       <div class="sidebar-sticky">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a  href="{{ url('admin') }}" class="nav-link 
-            @if (request()->url() == route('admin.dashboard') ) {{'active'}}  @else  {{''}}  @endif   ">
+            <a  href="{{ url('admin/dashboard') }}" class="nav-link 
+            @if (request()->url() == route('admin.dashboard')   ) {{'active'}}  @else  {{''}}  @endif   ">
 
               <span data-feather="home"></span>
               Dashboard <span class="sr-only">(current)</span>

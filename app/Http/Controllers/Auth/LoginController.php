@@ -50,7 +50,7 @@ class LoginController extends Controller
     {
             switch ($user->role->name) {
                 case 'admin':
-                    $this->redirectTo = '/admin';
+                    $this->redirectTo = '/admin/dashboard';
                     break;
                 
                 default:
