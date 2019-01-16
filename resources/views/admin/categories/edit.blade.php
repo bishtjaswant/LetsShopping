@@ -2,12 +2,12 @@
 @section('breadcrumbs')
 <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}} ">Dashboard</a></li>
 <li class="breadcrumb-item" >Category</li>
-<li class="breadcrumb-item active" aria-current="page">Create Category</li>
+<li class="breadcrumb-item active" aria-current="page">Edit Category</li>
 @endsection
 @section('content')
-<form action=" {{ route('admin.category.store') }}  " method="post" accept-charset="utf-8">
+<form action=" {{ route('admin.category.update', $category->id ) }}  " method="post" accept-charset="utf-8">
 	
-	<h2>Create new category</h2>
+	<h2>Update category</h2>
 	
 	<div class="form-group row">
 		<div class="col-sm-12">
@@ -32,29 +32,43 @@
 		</div>
 	</div>
 	@csrf
+	@method('PUT')
 	
 	<div class="form-group row">
 		<div class="col-sm-12">
 			<label class="form-control-label"> Title </label>
-			<input type="text" size="50" id="texturl" name="title" class="form-control" placeholder="enter category name here..........">
-			<p class="small text-muted">      {{ config('app.url')}} <span id="url"> </span> </p>
-			<input type="hidden" name="slug" id="slug" value="">
+			<input type="text" size="50" id="texturl" name="title" class="form-control" placeholder="enter category name here.........." value="{{ $category->title }}">
+			<p class="small text-muted">      {{ config('app.url')}}/<span id="url"> {{ $category->slug }} </span> </p>
+			<input type="hidden" name="slug" id="slug" value="{{ $category->slug }}">
 		</div>
 	</div>
 	<div class="form-group row">
 		<div class="col-sm-12">
 			<label class="form-control-label"> Description </label>
-			<textarea id="ckeditor" rows="10" cols="20" name="descriptions" class="form-control" placeholder="enter category description here.........." style="resize: none;">  </textarea>
+			<textarea id="ckeditor" rows="10" cols="20" name="descriptions" class="form-control" placeholder="enter category description here.........." style="resize: none;"> {{ $category->descriptions }}  </textarea>
 		</div>
 	</div>
 	<div class="form-group row">
 		<div class="col-sm-12">
+
+			@php
+              $ids = array_pluck($category->childrens  , 'id')
+			@endphp
+ 
 			<label class="form-control-label"> Select category </label>
 			<select id="parent_id" multiple="multiple" name="parent_id[]" class="form-control">
-				@if ( $categories )
+				@if ( isset($categories) )
 				<option value="0">top level</option>
+	
 				@foreach ( $categories  as $category )
-				<option value=" {{  $category->id }} ">   {{ $category->title }}   </option>
+	
+				<option  value=" {{  $category->id }} "
+                         
+                         @if ( isset($category)  && in_array($category->id, $ids)  )
+                                     {{'selected'}}             
+                         @endif
+					>   {{ $category->title }}   </option>
+	
 				@endforeach
 				@endif
 			</select>
@@ -62,7 +76,7 @@
 	</div>
 	<div class="form-group row">
 		<div class="col-sm-12">
-			<button type="submit" name="save" class=" btn btn-outline-primary">save categoy</button>
+			<button type="submit" name="save" class=" btn btn-outline-primary">Update categoy</button>
 			<a href="{{route('admin.category.index')}}  " class="btn btn-outline-success"> Back</a>
 		</div>
 	</div>

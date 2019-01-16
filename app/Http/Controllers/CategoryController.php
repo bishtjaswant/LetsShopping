@@ -11,7 +11,7 @@ class CategoryController extends Controller
 */
 public function index()
 {
-$categories = Category::all();
+$categories = Category::paginate(25);
 return view('admin.categories.index', compact('categories'));
 }
 /**
@@ -33,7 +33,6 @@ return view('admin.categories.create', compact('categories') ); // returning cre
 public function store(Request $request)
 {
 
- 
 $request->validate([
 'title' => 'required|min:5',
 'descriptions' => 'required|max:500',
@@ -62,6 +61,8 @@ public function show(Category $category)
 public function edit(Category $category)
 {
 //
+	$categories = Category::all();
+	return view('admin.categories.edit', [ 'categories'=>$categories, 'category'=>$category] );
 }
 /**
 * Update the specified resource in storage.
@@ -72,7 +73,31 @@ public function edit(Category $category)
 */
 public function update(Request $request, Category $category)
 {
-//
+// valudate
+	$request->validate([
+	'title' => 'required|min:5',
+	'descriptions' => 'required|max:500',
+	'slug' => "required|min:5"
+	]);
+
+	$category->title = $request->title;
+	$category->descriptions = $request->descriptions;
+	$category->slug = $request->slug;
+
+
+   // detach the recorrd
+	$category->childrens()->detach();
+
+
+    // attached
+	$category->childrens()->attach($request->parent_id);
+    
+
+    // ssave the records into db
+	$category->save();
+
+	return back()->with("message","category Updated");
+
 }
 /**
 * Remove the specified resource from storage.
@@ -83,5 +108,24 @@ public function update(Request $request, Category $category)
 public function destroy(Category $category)
 {
 //
+	 if ($category->delete()) {
+	 	
+	      return back()->with("message","category Removed");
+	 } else {
+	 	
+	return back()->with("message","failed to delete category");
+	 }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 }
