@@ -17,6 +17,7 @@
     <!--select2 css-->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css">
     
+    <link rel="icon" href="{{ URL::to('/') }}/images/favicon.jpeg" type="image/jpeg" sizes="16x16">
   </head>
   <body>
     <div id="app">
@@ -101,6 +102,8 @@
     <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
     
     
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"> </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     

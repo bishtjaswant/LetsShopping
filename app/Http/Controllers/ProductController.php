@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
+use App\Http\Requests\StoreProduct;
 use App\Product;
 use Illuminate\Http\Request;
 
@@ -26,6 +28,8 @@ class ProductController extends Controller
      */
     public function create()
     {
+         $categories = Category::all();
+        return view('admin.products.create', compact('categories') );
         //
     }
 
@@ -35,9 +39,37 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProduct $request)
     {
         //
+        // dd($request->all());
+        $extension = "." .$request->file('thumbnail')->getClientOriginalExtension();
+        $name = basename($request->file('thumbnail')->getClientOriginalName(), $extension ).time();
+        $name = $name.$extension;
+  
+        $path = $request->thumbnail->storeAs('images', $name);
+
+        $product = Product::create([
+              "name" => $request->title,
+              "slug" =>  $request->slug,
+              "descriptions" => $request->description,
+              "price" => $request->price,
+              "discount_price" => ($request->discount_price) ? $request->discount_price : 0,
+              "status" => $request->status, 
+              "thumbnail" => $path,
+              "featured" => ($request->featured) ? $request->featured : 0,
+        ]);
+
+        $product->categories()->attach( $request->category_id ) ;
+
+
+        if ($product && $product->save() ) {
+            return back()->with("message","product added");
+        } else {
+            return back()->with("message","failed to product added");
+            
+        }
+
     }
 
     /**
@@ -84,4 +116,6 @@ class ProductController extends Controller
     {
         //
     }
+
+
 }

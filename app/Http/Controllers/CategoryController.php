@@ -40,6 +40,7 @@ $request->validate([
 ]);
 $categories  = Category::create($request->only('title','descriptions','slug'));
 $categories->childrens()->attach($request->parent_id);
+$categories->save();
 return back()->with("message","category added");
 }
 /**
@@ -61,7 +62,7 @@ public function show(Category $category)
 public function edit(Category $category)
 {
 //
-	$categories = Category::all();
+	$categories = Category::where('id','!=', $category->id)->get();
 	return view('admin.categories.edit', [ 'categories'=>$categories, 'category'=>$category] );
 }
 /**
@@ -108,9 +109,10 @@ public function update(Request $request, Category $category)
 public function destroy(Category $category)
 {
 //
-	 if ($category->delete()) {
+
+	 if ($category->forceDelete() && $category->childrens()->detach() ) {
 	 	
-	      return back()->with("message","category Removed");
+	      return back()->with("message","category deleted");
 	 } else {
 	 	
 	return back()->with("message","failed to delete category");
@@ -118,11 +120,50 @@ public function destroy(Category $category)
 }
 
 
+public function remove(Category  $category)
+{
+	 if ($category->delete()) {
+	 	
+	      return back()->with("message","category trashed   Successfully");
+	 } else {
+	 	
+	return back()->with("message","failed to delete category");
+	 }
+
+}
 
 
+public function recover($id)
+{
+	// recover the data from traashed cand
+	$trashed = Category::onlyTrashed()->findOrFail($id);
+	if ($trashed->restore() ) {
+	return back()->with("message","category retstored successfully");
+		
+	} else {
+	return back()->with("message","failed to retriving trashed data");
+		
+	}
+}
 
 
+public function trash()
+{
+$categories = Category::onlyTrashed()->paginate(25);
+return view('admin.categories.trashed', ['categories'=> $categories]);	
+}
+ 
 
+public function trashedItemDeletePermanetly($id)
+{ 
+   	 /*if ( Category::findOrFail($id)->forceDelete()  ) {
+	 	
+	      return back()->with("message","permanetly trashed item deleted");
+	 } else {
+	 	
+	return back()->with("message","failed to delete trashed item");
+	 }	*/
+}
 
 
 
