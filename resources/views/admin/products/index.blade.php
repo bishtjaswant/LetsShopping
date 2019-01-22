@@ -53,6 +53,9 @@
           @endif
         </td>
         <td> {{ $product->price }} </td>
+      </tr>
+      @endforeach
+    </tbody>
         <td> <img src="{{Storage::disk('public')->url('/products/'.$product->thumbnail ) }}" alt=" {{ $product->title }} " height="80" width="100" class="img img-thumbnail img-responsive"> </td>
         <td>
           <p>{{$product->created_at }} </p>
@@ -80,9 +83,6 @@
           </form>
 
         </td>
-      </tr>
-      @endforeach
-    </tbody>
   </table>
   @else
   <p class="alert alert-danger"> there are no products yet</p>

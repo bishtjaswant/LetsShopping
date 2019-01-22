@@ -45,9 +45,26 @@ Route::get('/product/recover/{id}', 'ProductController@recover')->name('product.
 // trashed item permaneetly deletinng
 Route::get('/product/trash/{id}', 'ProductController@trashedItemDeletePermanetly')->name('product.removeTrashed');
 
+// view extras options via ajax
+Route::view('product/extras', 'admin.partial.extras')->name('product.extras');
+
 // product resource
 Route::resource('/product', 'ProductController');
+});
 
+
+
+
+// route for profile;
+Route::group(['prefix' => 'admin', 'middleware'=>['auth','adminAuth'],'as'=>'admin.'], function() {
+    Route::get('profile/{profile}/remove', 'ProfileController@remove')->name('profile.remove');
+    Route::get('profile/trash', 'ProfileController@trash')->name('profile.trash');
+    Route::get('profile/recover/{id}', 'ProfileController@recoverProduct')->name('profile.recover');
+    Route::view('profile/roles', 'admin.partials.extras')->name('profile.extras');
+    Route::get('profile/states/{id?}', 'ProfileController@getStates')->name('profile.states');
+    Route::get('profile/cities/{id?}', 'ProfileController@getCities')->name('profile.cities');
+    Route::resource('/profile', 'ProfileController');
 
 
 });
+

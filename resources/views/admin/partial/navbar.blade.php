@@ -31,6 +31,26 @@
             Orders
           </a>
         </li>
+
+
+
+
+        <!--USERS MODEL-->
+        <li class="nav-item">
+          <a class="nav-link dropdown
+            @if (request()->url() == route('admin.profile.index') ) {{'active'}}  @else  {{''}}  @endif
+            dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="usersDropdown" >
+            <span data-feather="users"></span>
+            Users
+          </a>
+          <div class="dropdown-menu" aria-labelledby="usersDropdown">
+            <a class="dropdown-item" href="{{route('admin.profile.index') }}">All Users</a>
+            <a class="dropdown-item" href="">Add User</a>
+     
+          </div>
+        </li>
+
+
         <li class="nav-item">
           <a class="nav-link dropdown
             @if (request()->url() == route('admin.product.index') ) {{'active'}}  @else  {{''}}  @endif
@@ -44,6 +64,10 @@
             <a class="dropdown-item" href="{{route('admin.product.trash')}}">Trashed Products</a>
           </div>
         </li>
+
+
+
+
         <li class="nav-item dropdown">
           <a class="nav-link
             

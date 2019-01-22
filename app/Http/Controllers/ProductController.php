@@ -71,6 +71,7 @@ $product = Product::create([
 "status" => $request->status,
 "thumbnail" => $file_name,
 "featured" => ($request->featured) ? $request->featured : 0,
+"extras" => (isset($request->extras)) ? json_encode($request->extras) : json_encode(),
 ]);
 
 if ($product  ) {
