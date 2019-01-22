@@ -2,13 +2,14 @@
 @section('breadcrumbs')
 <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
 <li class="breadcrumb-item "><a href="{{route('admin.product.index')}}">Products</a></li>
-<li class="breadcrumb-item active" aria-current="page">Add/Edit Products</li>
+<li class="breadcrumb-item active" aria-current="page">Edit Products</li>
 @endsection
 @section('content')
-<h2 class="h1">Add Products</h2>
-<form  action="{{ route('admin.product.store') }}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+<h2 class="h1">Edit Products</h2>
+<form  action="{{ route('admin.product.update', $product ) }}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
 	<div class="row">
 		@csrf
+		@method('PUT')
 		<div class="col-lg-9">
 			<div class="form-group row">
 				
@@ -32,9 +33,9 @@
 				</div>
 				<div class="col-lg-12">
 					<label class="form-control-label">Title: </label>
-				<input type="text" placeholder="title" id="texturl" name="title" class="form-control " value="{{old('title')}}"  />
+				<input type="text" placeholder="title" id="texturl" name="title" class="form-control " value="{{ $product->name}}"  />
 					<p class="small">{{config('app.url')}}-<span id="url"> </span>
-					<input type="hidden" name="slug" id="slug" value="{{old('slug')}}">
+					<input type="hidden" name="slug" id="slug" value="{{ $product->slug }}">
 				</p>
 			</div>
 		</div>
@@ -42,7 +43,7 @@
 			
 			<div class="col-lg-12">
 				<label class="form-control-label">Description: </label>
-				<textarea name="description" id="ckeditor" placeholder="description" class="form-control "> {{old('description')}}
+				<textarea name="description" id="ckeditor" placeholder="description" class="form-control "> {{ $product->descriptions }}
 				</textarea>
 			</div>
 		</div>
@@ -53,7 +54,7 @@
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">$</span>
 					</div>
-					<input type="text" class="form-control" placeholder="0.00" aria-label="Username" aria-describedby="basic-addon1" name="price" value="{{old('price')}}" />
+					<input type="text" class="form-control" placeholder="0.00" aria-label="Username" aria-describedby="basic-addon1" name="price" value="{{ $product->price }}" />
 				</div>
 			</div>
 			<div class="col-6">
@@ -62,7 +63,7 @@
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">$</span>
 					</div>
-					<input type="text" class="form-control" name="discount_price" placeholder="0.00" aria-label="discount_price" aria-describedby="discount" value="{{old('discount_price')}}" />
+					<input type="text" class="form-control" name="discount_price" placeholder="0.00" aria-label="discount_price" aria-describedby="discount" value="{{ $product->discount_price }}" />
 				</div>
 			</div>
 		</div>
@@ -102,15 +103,18 @@
 			<li class="list-group-item">
 				<div class="form-group row">
 					<select class="form-control" id="status" name="status">
-						<option value="0" >Pending</option>
-						<option value="1" >Publish</option>
+						<option value="0" @if (isset($product) && $product->status==0)
+							{{'selected'}}	@endif >Pending</option>
+
+						<option value="1"  @if (isset($product) && $product->status==1)
+							{{'selected'}}	@endif >Publish</option>
 					</select>
 				</div>
 				<div class="form-group row">
 					<div class="col-lg-12">
 						
 						
-						<input type="submit" name="submit" class="btn btn-primary btn-block " value="Add Product" />
+						<input type="submit" name="submit" class="btn btn-success btn-block " value="Update Product" />
 						
 					</div>
 					
@@ -125,27 +129,38 @@
 					</div>
 				</div>
 				<div class="img-thumbnail  text-center">
-					<img src="{{ URL::to('/') }}/images/noimage.jpeg" id="imgthumbnail" class="img-fluid" alt="thumbnail" height="500" width="500">
+					<img src="{{ Storage::disk('public')->url('products/'. $product->thumbnail) }}" id="" class="img-fluid" alt="{{ $product->name }}" height="500" width="500">
 				</div>
 			</li>
 			<li class="list-group-item">
 				<div class="col-12">
 					<div class="input-group mb-3">
 						<div class="input-group-prepend">
-							<span class="input-group-text" ><input id="featured" type="checkbox" name="featured" value=" " ></span>
+							<span class="input-group-text" ><input id="featured" type="checkbox" name="featured" value=""  @if (isset($product) && $product->featured==1)
+							{{'checked'}}	@endif   >  </span>
 						</div>
-						<p type="text" class="form-control" name="featured" placeholder="0.00" aria-label="featured" aria-describedby="featured" >Featured Product</p>
+						<p type="text" class="form-control" name="featured" placeholder="0.00" aria-label="featured"   aria-describedby="featured" >Featured Product</p>
 					</div>
 				</div>
 			</li>
 			
-			<li class="list-group-item active"><h5>Select Categories</h5></li>
+			<li class="list-group-item active"><h5>Select Products</h5></li>
 			<li class="list-group-item ">
 				<select name="category_id[]" id="select2" class="form-control" multiple="multiple">
-					
+					@php
+						$ids = ( isset($product) && $product->categories->count()>0) ? array_pluck($product->categories,'id') : null;
+						// dd($ids);
+					@endphp
 					@if ($categories->count() >0 )
 					@foreach ($categories as $category)
-					<option value="{{$category->id}}"> {{$category->title }} </option>
+					<option value="{{$category->id}}" 
+                     @if (!is_null($product) && in_array($category->id, $ids ))
+                     	{{'selected'}}
+                     @endif	> 
+                     
+					{{$category->title }} </option>
+				
+
 					@endforeach
 					
 					@endif
@@ -171,6 +186,7 @@ console.log( editor );
 console.error( error );
 } );
  
+
 	// validate slug
 $('#texturl').on('keyup', function(event) {
     const url = slugify( $(this).val() );
@@ -188,19 +204,9 @@ return text.toString().toLowerCase()
 .replace(/-+$/, '');            // Trim - from end of text
 }
 
-//featured
-$("#featured").on('change', function() {
-	if($(this).is(':checked')){
-		$(this).val(1);
-	}else{
-		$(this).val(0);
-	}
-});
-
-
 
 		$('#select2').select2({
-			"placeholder":"select multiple categories.....",
+			"placeholder":"select multiple products.....",
 		"allowClear":true,
 			"minimumResultsForSearch":Infinity
 			});
@@ -221,6 +227,14 @@ $('#thumbnail').change(function(event) {
 	})
 });
 
+//featured
+$("#featured").on('change', function() {
+	if($(this).is(':checked')){
+		$(this).val(1);
+	}else{
+		$(this).val(0);
+	}
+});
 
 
 });

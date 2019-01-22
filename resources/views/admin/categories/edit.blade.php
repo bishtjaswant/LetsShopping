@@ -64,9 +64,7 @@
 	
 				<option  value=" {{  $category->id }} "
                          
-                         @if ( isset($category)  && in_array($category->id, $ids)  )
-                                     {{'selected'}}             
-                         @endif
+                         selected
 					>   {{ $category->title }}   </option>
 	
 				@endforeach

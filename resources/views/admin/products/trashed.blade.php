@@ -1,7 +1,7 @@
 @extends('admin.app')
 @section('breadcrumbs')
 <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
-<li class="breadcrumb-item active" aria-current="page">Products</li>
+<li class="breadcrumb-item active" aria-current="page">Trashed Products</li>
 @endsection
 @section('content')
 <div class="row d-block">
@@ -14,13 +14,8 @@
   </div>
 </div>
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-  <h2 class="h2">Products List</h2>
-  <div class="btn-toolbar mb-2 mb-md-0">
-    <a href="{{route('admin.product.create')}}" class="btn btn-sm btn-outline-secondary">
-      Add Product
-    </a>
-     
-  </div>
+  <h2 class="h2">Trashed List</h2>
+ 
 </div>
 <div class="table-responsive">
   @if (count($products) > 0 )
@@ -59,22 +54,18 @@
         </td>
         <td>
 
-          <a href="{{ route('admin.product.edit', $product->slug ) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
-          
-
-         <a href="{{ route('admin.product.remove', $product->slug ) }}" class="btn btn-sm btn-outline-primary">Trash</a>
-
-
+          <a href="{{ route('admin.product.recover', $product->id ) }}" class="btn btn-sm btn-outline-primary">Recover</a>
+           
             
 {{-- deleting --}}
           <a href="javascript:void"
             onclick="event.preventDefault();
-            const confirmedToDelete = confirm('Are you sure want to delete this product permanetly.?');
+            const confirmedToDelete = confirm(`Are you sure want to remove this  item from trashed cand permanetly.?`);
             if(confirmedToDelete){
-            document.getElementById('delete-product-form').submit();
-            }"  class="btn btn-sm btn-outline-danger">Delete</a>
+            document.getElementById('delete-trashed-form').submit();
+            }"  class="btn btn-sm btn-outline-danger">Remove</a>
           
-          <form id="delete-product-form" action="{{ route('admin.product.destroy', $product->slug ) }}" method="POST" style="display: none;">
+          <form id="delete-trashed-form" action="{{ route('admin.product.removeTrashed', $product->id ) }}" method="POST" style="display: none;">
             @csrf
             @method('DELETE')
           </form>
@@ -85,7 +76,7 @@
     </tbody>
   </table>
   @else
-  <p class="alert alert-danger"> there are no products yet</p>
+  <p class="alert alert-danger"> there are no trashed products yet</p>
   @endif
   
 </div>

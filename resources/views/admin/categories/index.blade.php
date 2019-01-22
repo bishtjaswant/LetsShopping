@@ -58,11 +58,11 @@
 				
 				<td>
 					<!--edit category to request-->
-					<a href="{{route('admin.category.edit', $category->id )}}" class="btn btn-outline-success btn-sm">Edit</a>
+					<a href="{{route('admin.category.edit', $category->slug )}}" class="btn btn-outline-success btn-sm">Edit</a>
 					
 
 					<!--trashed category to request-->
-					<a href="{{route('admin.category.remove', $category->id)}}" class="btn btn-outline-primary btn-sm">Trash</a>
+					<a href="{{route('admin.category.remove', $category->slug )}}" class="btn btn-outline-primary btn-sm">Trash</a>
 					
 
 					<!--delete category to request-->
@@ -74,7 +74,7 @@
 						document.getElementById('delete-category-form').submit();
 						}"
 					class="btn btn-sm btn-outline-danger">Delete</a>
-					<form id="delete-category-form" action="{{ route('admin.category.destroy', $category->id ) }}" method="POST" style="display: none;">
+					<form id="delete-category-form" action="{{ route('admin.category.destroy', $category->slug ) }}" method="POST" style="display: none;">
 						@csrf
 						@method('DELETE')
 					</form>

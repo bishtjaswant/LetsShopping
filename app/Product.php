@@ -21,6 +21,12 @@ class Product extends Model
     {
     	return $this->belongsToMany('App\Category');
     }
+
+ 
+		public function getRouteKeyName()
+		{
+		    return 'slug';
+		}
     
 
 

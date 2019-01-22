@@ -32,7 +32,7 @@ class StoreProduct extends FormRequest
               // "extras" => 'required|array' ,
               "status" => 'required',
               "category_id" => 'required',
-              "thumbnail" => 'required|mimes:jpeg,jpg,png|max:3048',
+              "thumbnail" => 'mimes:jpeg,jpg,png|max:3048',
           ];
     }
 }
