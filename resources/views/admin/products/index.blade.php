@@ -1,4 +1,7 @@
 @extends('admin.app')
+@section('title')
+  all products
+@endsection
 @section('breadcrumbs')
 <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
 <li class="breadcrumb-item active" aria-current="page">Products</li>
@@ -23,7 +26,7 @@
   </div>
 </div>
 <div class="table-responsive">
-  @if (count($products) > 0 )
+  @if (isset($products) && count($products) > 0 )
   <table class="table table-striped table-sm">
     <thead>
       <tr>
@@ -39,28 +42,29 @@
       </tr>
     </thead>
     <tbody>
-      @foreach ($products as $product)
-      <tr>
-        <td> {{ $product->id }} </td>
-        <td> {{ $product->name }} </td>
-        <td> {{ $product->descriptions  }} </td>
-        <td> {{ $product->slug }} </td>
-        <td>
-          @if ($product->categories()->count()>0)
-          @foreach ( $product->categories as $pro_child )
-          {{ $pro_child->title }}
-          @endforeach
-          @endif
-        </td>
-        <td> {{ $product->price }} </td>
-      </tr>
-      @endforeach
-    </tbody>
-        <td> <img src="{{Storage::disk('public')->url('/products/'.$product->thumbnail ) }}" alt=" {{ $product->title }} " height="80" width="100" class="img img-thumbnail img-responsive"> </td>
-        <td>
-          <p>{{$product->created_at }} </p>
-        </td>
-        <td>
+       @foreach ($products as $product)
+           <tr>
+               <td> {{ $product->id }} </td>
+                <td> {{ $product->name }} </td>
+                <td> {{ $product->descriptions  }} </td>
+                <td> {{ $product->slug }} </td>
+                <td>
+                  @if ($product->categories()->count()>0)
+                  @foreach ( $product->categories as $pro_child )
+                  {{ $pro_child->title }}
+                  @endforeach
+                  @endif
+                </td>
+                <td> {{ $product->price }} </td>
+
+
+               <td>
+                <img src="{{Storage::disk('public')->url('/products/'.$product->thumbnail ) }}" alt=" {{$product->title }} " height="80" width="100" class="img img-thumbnail img-responsive"> </td>
+                  
+                <td>{{$product->created_at }}          </td>
+                    
+                <td>
+                  
 
           <a href="{{ route('admin.product.edit', $product->slug ) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
           
@@ -68,7 +72,9 @@
          <a href="{{ route('admin.product.remove', $product->slug ) }}" class="btn btn-sm btn-outline-primary">Trash</a>
 
 
-            
+
+
+          
 {{-- deleting --}}
           <a href="javascript:void"
             onclick="event.preventDefault();
@@ -82,7 +88,11 @@
             @method('DELETE')
           </form>
 
-        </td>
+                </td>
+
+           </tr>
+       @endforeach
+    </tbody>
   </table>
   @else
   <p class="alert alert-danger"> there are no products yet</p>

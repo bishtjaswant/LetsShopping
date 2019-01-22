@@ -1,4 +1,7 @@
 @extends('admin.app')
+@section('title')
+  add category
+@endsection
 @section('breadcrumbs')
 <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}} ">Dashboard</a></li>
 <li class="breadcrumb-item" >Category</li>
