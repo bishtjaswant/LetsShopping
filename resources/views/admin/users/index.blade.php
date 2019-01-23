@@ -32,7 +32,7 @@
         <th>Email</th>
         <th>Slug</th>
         <th>role</th>
-        <th>Address</th>
+        <th>Full Address</th>
         <th>Thumbnail</th>
         <th>Registered At</th>
         <th colspan="5">Actions</th>
@@ -47,7 +47,7 @@
          <td>{{@$user->email}}</td>
          <td>{{@$user->profile->slug  }}</td>
          <td>{{@$user->role->name  }}</td>
-         <td>{{@$user->profile->address  }}</td>
+         <td>{{@$user->profile->address  }}, {{@$user->getCountry()  }} , {{@$user->getState() }}  ,  {{@$user->getCity() }}       </td>
          <td><img src="{{Storage::disk('public')->url('users/'.@$user->profile->thumbnail )   }}" class="img imgthumbnail img-responsive" width="100" height="100" alt="{{ @$user->profile->name }}"></td>
          <td>{{@$user->profile->created_at }}</td>
                  <td>

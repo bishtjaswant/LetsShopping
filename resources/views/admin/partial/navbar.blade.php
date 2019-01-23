@@ -45,7 +45,7 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="usersDropdown">
             <a class="dropdown-item" href="{{route('admin.profile.index') }}">All Users</a>
-            <a class="dropdown-item" href="">Add User</a>
+            <a class="dropdown-item" href="{{ route('admin.profile.create') }}">Add User</a>
      
           </div>
         </li>

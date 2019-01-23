@@ -40,7 +40,7 @@
 		<div class="col-sm-12">
 			<label class="form-control-label"> Title </label>
 			<input type="text" size="50" id="texturl" name="title" class="form-control" placeholder="enter category name here..........">
-			<p class="small text-muted">      {{ config('app.url')}} <span id="url"> </span> </p>
+			<p class="small text-muted">      {{ config('app.url')}}- <span id="url"> </span> </p>
 			<input type="hidden" name="slug" id="slug" value="">
 		</div>
 	</div>

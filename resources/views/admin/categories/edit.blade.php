@@ -55,7 +55,8 @@
 		<div class="col-sm-12">
 
 			@php
-              $ids = array_pluck($category->childrens  , 'id')
+              $ids = array_pluck($category->childrens  , 'id');;
+              dd($ids);
 			@endphp
  
 			<label class="form-control-label"> Select category </label>

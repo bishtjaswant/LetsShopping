@@ -32,16 +32,27 @@ return view('admin.categories.create', compact('categories') ); // returning cre
 */
 public function store(Request $request)
 {
-
+// dd($request->all());
 $request->validate([
 'title' => 'required|min:5',
 'descriptions' => 'required|max:500',
 // 'slug' => "required|min:5|unique:categories"
 ]);
-$categories  = Category::create($request->only('title','descriptions','slug'));
-$categories->childrens()->attach($request->parent_id);
+$categories  = new Category;
+$categories->title = $request->title;
+$categories->descriptions = $request->descriptions;
+$categories->slug = str_slug($request->slug,'-');
 $categories->save();
+
+$categories->childrens()->attach( (isset($request->parent_id)? $request->parent_id: 0) );
+
+
+$categories->save();
+
+
 return back()->with("message","category added");
+
+
 }
 /**
 * Display the specified resource.

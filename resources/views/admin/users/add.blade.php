@@ -1,5 +1,10 @@
-
 @extends('admin.app')
+@section('title')
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
+  Add new user
+@endsection
 @section('breadcrumbs')
 <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
 <li class="breadcrumb-item "><a href="{{route('admin.profile.index')}}">users</a></li>
@@ -7,14 +12,13 @@
 @endsection
 @section('content')
 <h2 class="modal-title">Add/Edit users</h2>
-<form  action="@if(isset($user)) {{route('admin.profile.update', $user)}} @else {{route('admin.profile.store')}} @endif" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+<form  action=" {{route('admin.profile.store')}}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
 	<div class="row">
 		@csrf
-		@if(isset($user))
-		@method('PUT')
-		@endif
+		
 		<div class="col-lg-9">
 			<div class="form-group row">
+			
 				<div class="col-sm-12">
 					@if ($errors->any())
 					<div class="alert alert-danger">
@@ -35,26 +39,27 @@
 				</div>
 				<div class="col-sm-12 col-md-6">
 					<label class="form-control-label">Name: </label>
-					<input type="text" id="txturl" name="name" class="form-control " value="{{@$user->profile->name}}" />
-					<p class="small">{{route('admin.profile.index')}}/<span id="url">{{@$user->profile->slug}}</span>
-					<input type="hidden" name="slug" id="slug" value="{{@$user->profile->slug}}">
+			
+					<input type="text" id="txturl" name="name" placeholder="enter your name?" class="form-control " value="" title="name must be a string" />
+					<p class="small">{{route('admin.profile.index')}}/<span id="url">-----</span>
+					<input type="hidden" name="slug" id="slug" value="">
 				</p>
 			</div>
 			<div class="col-sm-12 col-md-6">
 				<label class="form-control-label">Email: </label>
-				<input type="text" id="email" name="email" class="form-control " value="{{@$user->email}}" />
+				<input type="text" placeholder="enter email address to contact" id="email" name="email" class="form-control " value="" title="please gives us a valid email address" />
 				
 			</div>
 		</div>
 		<div class="form-group row">
 			<div class="col-sm-12 col-md-6">
 				<label class="form-control-label">Password: </label>
-				<input type="password" id="password" name="password" class="form-control " value="{{@$user->profile->name}}" />
+				<input type="password" placeholder="enter a strong password" id="password" name="password" class="form-control " value="" title="password must be 8 digit long with special chars" />
 				
 			</div>
 			<div class="col-sm-12 col-md-6">
 				<label class="form-control-label">Re-Type Password: </label>
-				<input type="password" id="password_confirm" name="password_confirm" class="form-control " value="" />
+				<input type="password" placeholder="enter again your password" id="password_confirm" name="password_confirm" class="form-control " value="" title="password must be 8 digit long with special chars" />
 				
 			</div>
 		</div>
@@ -63,26 +68,19 @@
 				<label class="form-control-label">Status</label>
 				<div class="input-group mb-3">
 					<select class="form-control" id="status" name="status">
-						<option value="0" @if(isset($user) && $user->status == 0) {{'selected'}} @endif >Blocked</option>
-						<option value="1" @if(isset($user) && $user->status == 1) {{'selected'}} @endif>Active</option>
+						<option value="1">Active</option>
+						<option value="0" >Blocked</option>
 					</select>
 				</div>
 			</div>
-			@php
-			$ids = (isset($user->role) && $user->role->count() > 0 ) ? array_pluck($user->role->toArray(), 'id') : null;
-			@endphp
+		  
 			
 			<div class="col-sm-6">
 				<label class="form-control-label">Select Role</label>
-				<select name="role_id" id="role" class="form-control">
-					@if($roles->count() > 0)
-					@foreach($roles as $role)
-					<option value="{{$role->id}}"
-						@if(!is_null($ids) && in_array($role->id, $ids))
-						{{'selected'}}
-					@endif>{{$role->name}}</option>
-					@endforeach
-					@endif
+				<select title="select a role" name="role_id" id="role" class="form-control">
+					 <option value="1">Customer</option>
+					 <option value="2">Retailer</option>
+					 <option value="3">Admin</option>  
 				</select>
 			</div>
 		</div>
@@ -93,7 +91,7 @@
 			<div class="col-sm-12">
 				<label class="form-control-label">Address: </label>
 				<div class="input-group mb-3">
-					<input type="text" name="address" class="form-control " value="{{@$user->addrress}}" />
+					<textarea placeholder="enter your complete address" title="enter your complete address" name="address" class="form-control " value="" cols="10" rows="5"style="resize: none;" > </textarea>
 				</div>
 			</div>
 		</div>
@@ -102,17 +100,20 @@
 				<label class="form-control-label">Country: </label>
 				<div class="input-group mb-3">
 					<select name="country_id" class="form-control" id="countries">
-						<option value="0">Select a Country</option>
-						@foreach($countries as $country)
-						<option value="{{$country->id}}">{{$country->name}}</option>
-						@endforeach
+						 @if (isset($countries) && $countries->count()>0)
+						   <option value="0">select a country</option>
+						 	@foreach ($countries as $country)      	
+						 		<option value="{{$country->id}}"> {{ $country->name }} </option>
+						 	@endforeach
+						 @endif
+					
 					</select>
 				</div>
 			</div>
 			<div class="col-sm-6 col-md-3">
 				<label class="form-control-label">State: </label>
 				<div class="input-group mb-3">
-					<select name="state_id" class="form-control" id="states">
+					<select name="state_id" title="select your state" class="form-control" id="states">
 						<option value="0">Select a State</option>
 					</select>
 				</div>
@@ -121,15 +122,15 @@
 			<div class="col-sm-6 col-md-3">
 				<label class="form-control-label">City: </label>
 				<div class="input-group mb-3">
-					<select name="city_id" class="form-control" id="cities">
-						
+					<select title="select your city" name="city_id" class="form-control" id="cities">
+						<option value="0">Select your city</option>
 					</select>
 				</div>
 			</div>
 			<div class="col-sm-6 col-md-3">
 				<label class="form-control-label">Phone: </label>
 				<div class="input-group mb-3">
-					<input type="text" class="form-control" name="phone" placeholder="Phone" value="{{@$user->phone}}" />
+					<input type="number" class="form-control" name="phone" title="please give us valid number" placeholder="Phone number" value="" />
 				</div>
 			</div>
 		</div>
@@ -146,17 +147,15 @@
 					</div>
 				</div>
 				<div class="img-thumbnail  text-center">
-					<img src="@if(isset($user)) {{asset('storage/'.$user->thumbnail)}} @else {{asset('images/no-thumbnail.jpeg')}} @endif" id="imgthumbnail" class="img-fluid" alt="">
+					<img src="{{Storage::disk('public')->url('users/nouser.png')  }}" id="imgthumbnail" class="img-fluid" alt="user-profile">
 				</div>
 			</li>
 			<li class="list-group-item">
 				<div class="form-group row">
 					<div class="col-lg-12">
-						@if(isset($user))
-						<input type="submit" name="submit" class="btn btn-primary btn-block " value="Update user" />
-						@else
-						<input type="submit" name="submit" class="btn btn-primary btn-block " value="Add user" />
-						@endif
+						 
+						<input type="submit" name="submit" class="btn btn-primary btn-block " value="Save user" />
+					 
 					</div>
 					
 				</div>
@@ -187,46 +186,60 @@ $("#imgthumbnail").attr('src', image);
 $('#countries').select2().trigger('change');
 $('#states').select2();
 $('#cities').select2();
-//On Country Change
-$('#countries').on('change', function(){
-	var id = $('#countries').select2('data')[0].id;
+//On Country changes
+$('#countries').on('change', function(event) {
+	event.preventDefault();
+	const selectedContryId = $(this).select2('data')[0].id;
 	$('#states').val(null);
 	$('#states option').remove();
 	// Fetch the preselected item, and add to the control
-var studentSelect = $('#states');
+ const states = $('#states');
 $.ajax({
-type: 'GET',
-url: "{{route('admin.profile.states')}}/" + id
+    type: 'GET',
+    url: "{{route('admin.profile.states') }}/" + selectedContryId,
 }).then(function (data) {
-	// create the option and append to Select2
-	for(i=0; i< data.length; i++){
-		var item = data[i]
-		var option = new Option(item.name, item.id, true, true);
-		studentSelect.append(option);
-	}
-studentSelect.trigger('change');
-	});
-})
+    // create the option and append to Select2
+    for (var i = 0; i <= data.length; i++) {
+    	let item =  data[i];;
+
+		   let option = new Option(item.name, item.id, true, true);
+		    states.append(option).trigger('change');
+    }
+});
+
+
+});
+
 //On state Change
-$('#states').on('change', function(){
-	var id = $('#states').select2('data')[0].id;
+
+$('#states').on('change', function(event) {
+	event.preventDefault();
+	const selectedStateId = $(this).select2('data')[0].id;
 	// Fetch the preselected item, and add to the control
-	var studentSelect = $('#cities');
 	$('#cities').val(null);
 	$('#cities option').remove();
+ const cities = $('#cities');
 $.ajax({
-type: 'GET',
-url: "{{route('admin.profile.cities')}}/" + id
+    type: 'GET',
+    url: "{{route('admin.profile.cities') }}/" + selectedStateId,
 }).then(function (data) {
-	// create the option and append to Select2
-	for(i=0; i< data.length; i++){
-		var item = data[i]
-		var option = new Option(item.name, item.id, false, false);
-		studentSelect.append(option);
-	}
-	});
-studentSelect.trigger('change');
-})
-})
+    // create the option and append to Select2
+    for (var i = 0; i <= data.length; i++) {
+    	let item =  data[i];;
+
+		   let option = new Option(item.name, item.id, true, true);
+		    cities.append(option).trigger('change');
+    }
+});
+
+
+});
+
+
+
+
+
+
+}); // jquery
 </script>
 @endsection
